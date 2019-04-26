@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 var User = require('./User');
+
 // ADD THIS PART
 // CREATES A NEW USER
 router.post('/', function (req, res) {
@@ -35,6 +36,19 @@ router.get('/:id', function (req, res) {
         res.status(200).send(user);
     });
 });
+
+// GETS A SINGLE USER FROM THE DATABASE with address
+router.get('/Address/:id', function (req, res) {
+  // Queries
+  User.findOne({_id: req.params.id}).populate('address').exec(function (err, user) {
+        if (err) return res.status(500).send("There was a problem finding the user.");
+        if (!user) return res.status(404).send("No user found.");
+        res.status(200).send(user);
+    });
+});
+
+
+
 
 // DELETES A USER FROM THE DATABASE
 router.delete('/:id', function (req, res) {
